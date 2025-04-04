@@ -18,7 +18,8 @@ router.post('/logout', logout)
 router.put('/updateProfilePic', protectRoutes, updateProfilePic)
 
 // check the autheticated user
-router.get('/check',protectRoutes,checkAuth)
+router.get('/check', protectRoutes, checkAuth)
+
 
 
 
