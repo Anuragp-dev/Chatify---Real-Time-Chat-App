@@ -1,5 +1,6 @@
 import express from 'express'
-import { login, logout, signup } from '../controllers/auth.controller.js'
+import { checkAuth, login, logout, signup, updateProfilePic } from '../controllers/auth.controller.js'
+import { protectRoutes } from '../middleware/auth.middleware.js'
 
 
 
@@ -11,6 +12,13 @@ router.post('/signup', signup)
 router.post('/login', login)
 // logout
 router.post('/logout', logout)
+
+
+// update user profile pic
+router.put('/updateProfilePic', protectRoutes, updateProfilePic)
+
+// check the autheticated user
+router.get('/check',protectRoutes,checkAuth)
 
 
 
