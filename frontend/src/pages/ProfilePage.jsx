@@ -1,14 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
-import { Camera } from 'lucide-react'
+import { Camera, User } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 const ProfilePage = () => {
 
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore()
+  const [selectedImg, setSelectedImg] = useState(null)
 
   const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!allowedTypes.includes(file.type)) {
+      return toast.error("Only JPG, PNG, or WEBP images allowed");
+    }
+
+    if (file.size > maxSize) {
+      return toast.error("File size must be less than 5MB");
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = async () => {
+      const base64Image = reader.result;
+      setSelectedImg(base64Image)
+      await updateProfile({ profilePic: base64Image });
+    };
+  };
+
   return (
     <div className='h-screen pt-20'>
       <div className='max-w-2xl mx-auto p-4 py-8'>
@@ -20,7 +44,7 @@ const ProfilePage = () => {
           {/* avatar image */}
           <div className='flex flex-col items-center gap-4'>
             <div className='relative'>
-              <img src={authUser.profilePic || "/avatar.png"} className='size-32 rounded-full object-cover border-4' alt="profile" />
+              <img src={selectedImg || authUser.profilePic || "/avatar.png"} className='size-32 rounded-full object-cover border-4' alt="profile" />
               <label
                 htmlFor="avatar-upload"
                 className={`absolute bottom-0 right-0 bg-base-content hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200 ${isUpdatingProfile ? "animate-pulse" : ""}`}
@@ -40,6 +64,37 @@ const ProfilePage = () => {
             <p className='text-sm text-zinc-400'>
               {isUpdatingProfile ? "uploading..." : "Click the camera icon to update your photo"}
             </p>
+          </div>
+          <div className='space-y-6'>
+            <div className='space-y-1.5'>
+              <div className='text-sm text-zinc-400 flex items-center gap-2'>
+                <User className="wi4 h-4" />
+                Full Name
+              </div>
+              <p className='px-4 py-2.5 bg-base-200 rounded-lg border'>{authUser?.fullName}</p>
+            </div>
+
+            <div className='space-y-1.5'>
+              <div className='text-sm text-zinc-400 flex items-center gap-2'>
+                <User className="wi4 h-4" />
+                Email Address
+              </div>
+              <p className='px-4 py-2.5 bg-base-200 rounded-lg border'>{authUser?.email}</p>
+            </div>
+          </div>
+
+          <div className='mt- bg-base-300  rounded-xl p-6'>
+            <h2>Account Information</h2>
+            <div className='space-y-3 text-sm'>
+              <div className='flex item-center justify-between py-2 border-b border-s-zinc-700'>
+                <span>Member Since</span>
+                <span>{authUser.createdAt?.split('T')[0]}</span>
+              </div>
+              <div className='flex items-center justify-between py-2'>
+                <span>Account status</span>
+                <span className='text-green-500'>Active</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

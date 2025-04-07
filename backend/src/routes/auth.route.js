@@ -15,7 +15,7 @@ router.post('/logout', logout)
 
 
 // update user profile pic
-router.put('/updateProfilePic', protectRoutes, updateProfilePic)
+router.put('/update-profile', protectRoutes, updateProfilePic)
 
 // check the autheticated user
 router.get('/check', protectRoutes, checkAuth)
