@@ -8,6 +8,7 @@ import Settings from './pages/SettingsPage'
 import Profile from './pages/ProfilePage'
 import { useAuthStore } from './store/useAuthStore'
 import { Loader } from 'lucide-react'
+import { Toaster } from 'react-hot-toast'
 
 
 const App = () => {
@@ -44,6 +45,8 @@ const App = () => {
 
 
 
+
+    <Toaster/>
 
     </div>
   )
