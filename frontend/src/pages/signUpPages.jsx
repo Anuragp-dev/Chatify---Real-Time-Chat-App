@@ -81,7 +81,7 @@ const signUpPages = () => {
 
 
                     </form>
-
+ 
                 </div>
 
             </div>
