@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { useChatStore } from '../store/useChatStore'
-import { Image, X } from 'lucide-react'
+import { Image, Send, X } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 const MessageInput = () => {
     const [text, setText] = useState('')
@@ -9,11 +10,42 @@ const MessageInput = () => {
     const { sendMessage } = useChatStore()
 
 
-    const handleImageChange = (e) => { }
+    const handleImageChange = (e) => {
 
-    const removeImage = () => { }
+        const file = e.target.files[0];
+        if (!file.type.startsWith('image/')) {
+            toast.error("Please select an image file");
+            return;
 
-    const handleSendMessage = () => { }
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            setImagePreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+
+    }
+
+    const removeImage = () => {
+        setImagePreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ''; // Clear the file input
+        }
+     }
+
+    const handleSendMessage = async (e) => { 
+        e.preventDefault()
+        if (!text.trim() && !imagePreview) return;
+
+        try {
+            await sendMessage({ text: text.trim(), image: imagePreview });
+            setText('');
+            setImagePreview(null);
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    }
 
     return (
         <div className='p-4 w-full  '>
@@ -28,7 +60,7 @@ const MessageInput = () => {
                         />
                         <button
                             onClick={removeImage}
-                            className='absolute -top-1.5 1-5 h-5 rounded-full bg-base-300 flex items-center justify-center'
+                            className='absolute -top-1.5 -right-1.5 w-5  h-5 rounded-full bg-base-300 flex items-center justify-center'
                             type="button"
                         >
                             <X className='size-3' />
@@ -64,6 +96,14 @@ const MessageInput = () => {
                         <Image className='size-5' />
                     </button>
                 </div>
+
+                <button
+                    type='submit'
+                    className='btn btn-sm btn-circle'
+                    disabled={!text && !imagePreview}
+                >
+                    <Send className='size-22' />
+                </button>
             </form>
 
         </div>
