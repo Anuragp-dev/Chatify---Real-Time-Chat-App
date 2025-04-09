@@ -13,7 +13,7 @@ const LoginPage = () => {
 
   });
 
-  const { login, isLoggingIn } = useAuthStore()
+  const { login, isLoggingIng } = useAuthStore()
 
   // const validateForm = () => {
   //   if (!formData.email.trim()) return toast.error("Email is required");
@@ -108,10 +108,10 @@ const LoginPage = () => {
             <button
               type='submit'
               className='btn btn-primary w-full'
-              disabled={isLoggingIn}
+              disabled={isLoggingIng}
             // onClick={validateForm}
             >
-              {isLoggingIn ? (
+              {isLoggingIng ? (
                 <>
                   <Loader2 className='size-5 animate-spin' />
                 </>
