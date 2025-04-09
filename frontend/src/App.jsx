@@ -14,15 +14,17 @@ import { useThemeStore } from './store/useThemeStore'
 
 const App = () => {
 
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore()
+  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore()
   const { theme } = useThemeStore()
+
+  console.log(onlineUsers);
 
   React.useEffect(() => {
     checkAuth()
   }, [checkAuth])
 
-  
-  
+
+
 
 
   if (isCheckingAuth && !authUser) return (
@@ -34,7 +36,7 @@ const App = () => {
 
 
   return (
-    <div  data-theme={theme} >
+    <div data-theme={theme} >
 
       <Navbar />
 
