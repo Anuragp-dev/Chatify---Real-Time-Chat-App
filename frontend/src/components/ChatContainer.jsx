@@ -7,12 +7,23 @@ import { useAuthStore } from '../store/useAuthStore'
 import { formatMessageTime } from '../lib/utils'
 
 const ChatContainer = () => {
-    const { messages, getMessages, isMessageLoading, selectedUser } = useChatStore()
+    const { messages, getMessages, isMessageLoading, selectedUser, subscribeToMessages, unSubscribeToMessages } = useChatStore()
     const { authUser } = useAuthStore()
+    const messagesEndRef = React.useRef(null)
 
     useEffect(() => {
         getMessages(selectedUser._id)
-    }, [selectedUser._id, getMessages])
+        subscribeToMessages()
+
+        return () => unSubscribeToMessages()
+    }, [selectedUser._id, getMessages, subscribeToMessages, unSubscribeToMessages])
+
+    // for scroll to bottom when new message comes in
+    useEffect(() => {
+        if (messagesEndRef.current && messages) {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+        }
+    }, [messages])
 
     if (isMessageLoading) {
 
@@ -37,6 +48,7 @@ const ChatContainer = () => {
 
                     <div key={message._id}
                         className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+                        ref={messagesEndRef}
                     >
                         <div className='chat-image avatar'>
                             <div className='size-10 rounded-full border'>
