@@ -8,6 +8,11 @@ const Sidebar = () => {
     const { getUsers, users, selectedUser, setSelectedUser, isUserLoding } = useChatStore()
 
     const { onlineUsers, authUser } = useAuthStore()
+    const [isOnlineOnly, setIsOnlineOnly] = React.useState(false)
+
+
+    // only show online users filter
+    const filteredUsers = isOnlineOnly ? users.filter((user) => onlineUsers.includes(user._id)) : users
 
 
     useEffect(() => {
@@ -27,10 +32,23 @@ const Sidebar = () => {
                     <span className='font-medium hidden lg:block'>Contacts</span>
                 </div>
                 {/* online filter */}
+
+                <div className='mt-3 hidden lg:flex items-center gap-2'>
+                    <label htmlFor="" className='cursor-pointer flex items-center gap-2'>
+                        <input
+                            type="checkbox"
+                            checked={isOnlineOnly}
+                            onChange={(e) => setIsOnlineOnly(e.target.checked)}
+                            className='checkbox checkbox-sm'
+                        />
+                        <span className='text-sm'>Show online  only</span>
+                    </label>
+                    <span className='text-xs text-zinc-500'>({onlineUsers.length - 1} Online) </span>
+                </div>
             </div>
 
             <div className='overflow-y-auto w-full py-3'>
-                {users.filter((user) => user._id !== authUser._id).map((user) => (
+                {filteredUsers.filter((user) => user._id !== authUser._id).map((user) => (
                     <button
                         key={user._id}
                         onClick={() => setSelectedUser(user)}
@@ -62,6 +80,12 @@ const Sidebar = () => {
                         </div>
                     </button>
                 ))}
+
+                {filteredUsers.length === 0 && (
+                    <div className='py-4 text-center text-sm text-zinc-500'>
+                        No online users
+                    </div>
+                )}
             </div>
 
         </aside>

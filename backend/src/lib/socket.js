@@ -18,12 +18,14 @@ const io = new Server(server, {
 // get the socket id with the user id receiver socket id
 export const getReceiverSocketId = (userId) => {
 
-    userSocketMap[userId]
+   return userSocketMap[userId]
 }
 
 
 // store online users in this
 const userSocketMap = {}
+
+
 
 
 
@@ -48,6 +50,7 @@ io.on('connection', (socket) => {
         delete userSocketMap[userId]
         io.emit('getOnlineUsers', Object.keys(userSocketMap))
     })
+    console.log(userSocketMap)
 })
 
 
