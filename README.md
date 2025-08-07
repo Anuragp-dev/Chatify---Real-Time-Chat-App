@@ -6,7 +6,7 @@ A full-stack real-time chat application built with **React (Vite)**, **Node.js**
 
 ## 🚀 Features
 
-- ⚡ Real-time messaging with Socket.IO
+- ⚡ Real-time messaging with Socket.IO 
 - 🎨 32 customizable DaisyUI themes 
 - 🧑‍🤝‍🧑 Online user tracking
 - 💾 MongoDB for user and chat persistence
